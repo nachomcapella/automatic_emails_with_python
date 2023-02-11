@@ -16,13 +16,10 @@ def get_credentials():
 
     return sender_email, sender_password, receiver_email
 
-def compose_email(sender_email, receiver_email, df_to_do_list):
+def compose_email(sender_email, receiver_email, df_tasks_to_remind):
     subject = 'TO DO LIST NOTIFICATION'
 
-    body = """
-    Task: bla bla
-    Original date: bla bla
-    """
+    body = df_tasks_to_remind.to_markdown()
 
     em = EmailMessage()
     em['From'] = sender_email
@@ -33,7 +30,7 @@ def compose_email(sender_email, receiver_email, df_to_do_list):
     return em.as_string()
 
 
-def send_email(df_to_do_list):
+def send_email(df_tasks_to_remind):
     with smtplib.SMTP_SSL(
         host='smtp.gmail.com',
         port=465,
@@ -53,8 +50,8 @@ def send_email(df_to_do_list):
             msg=compose_email(
                 sender_email=sender_email,
                 receiver_email=receiver_email,
-                df_to_do_list=df_to_do_list
+                df_tasks_to_remind=df_tasks_to_remind
                 )
             )
 
-        print('Email sent')
+        return True
